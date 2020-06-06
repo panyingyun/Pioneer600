@@ -1,7 +1,7 @@
 # Pioneer600
 
 Learn hardware by golang on Raspberry Pi 4
-
+More from my own [Blog](https://www.michaelapp.com/posts/2018/2018-09-16-%E6%A0%91%E8%8E%93%E6%B4%BE4B%E5%AD%A6%E4%B9%A0%E4%B8%80/)
 ### 1、Hardware 
 - Raspberry Pi 4 Model B Rev 1.2
 - Pioneer600 (http://www.waveshare.net/wiki/Pioneer600)
