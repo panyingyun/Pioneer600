@@ -1,13 +1,13 @@
 #!/bin/bash
 
-go build -o pi
+go build -o Pioneer600
 
-sudo cp pi /usr/local/bin/
-sudo mkdir -p  /etc/pi/
-sudo cp prod.yml /etc/pi/
-sudo cp pi.service /lib/systemd/system/
-sudo chmod 644 /lib/systemd/system/pi.service
+sudo cp Pioneer600 /usr/local/bin/
+sudo mkdir -p  /etc/Pioneer600/
+sudo cp prod.yml /etc/Pioneer600/
+sudo cp Pioneer600.service /lib/systemd/system/
+sudo chmod 644 /lib/systemd/system/Pioneer600.service
 
 sudo systemctl daemon-reload
-sudo systemctl enable pi.service
-sudo systemctl restart  pi.service
+sudo systemctl enable Pioneer600.service
+sudo systemctl restart  Pioneer600.service

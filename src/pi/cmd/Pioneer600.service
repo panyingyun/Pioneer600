@@ -1,5 +1,5 @@
 [Unit]
-Description=Pi Demo Service
+Description=Pioneer600 Demo Service
 After=network.target
 
 [Service]
@@ -7,7 +7,7 @@ Type=simple
 User=root
 Restart=on-failure
 RestartSec=5s
-ExecStart=/usr/local/bin/pi -c /etc/pi/prod.yml
+ExecStart=/usr/local/bin/Pioneer600 -c /etc/Pioneer600/prod.yml
 
 [Install]
 WantedBy=multi-user.target
