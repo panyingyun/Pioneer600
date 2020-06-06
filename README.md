@@ -82,7 +82,7 @@ sudo ./Pioneer600 -f 3
 sudo ./Pioneer600 -f 4
 ```
 
-- "SPI Test SSD1306.
+- SPI Test SSD1306.
 ```shell
 sudo ./Pioneer600 -f 5
 ```
