@@ -9,7 +9,7 @@ Learn hardware by golang on Raspberry Pi 4
 ### 2、Rom & OS 
 - Raspberry Pi OS (32-bit) Lite (Raspbian GNU/Linux 10)
 
-### 3、Boot Config
+### 3、Boot config file
 
 *open i2c、spi、1-wire interface*
 
@@ -35,14 +35,15 @@ max_framebuffers=2
 dtoverlay=w1-gpio,gpio_pin=4
 ```
 
-### 4、How To Build 
+### 4、How to build 
 ```shell
 
 //ssh to your board and prepare Pioneer600
 //and install git tools 
 sudo apt-get update
 sudo apt-get upgrade
-sudo apt install -y vim curl wget git build-essential
+sudo apt install -y vim git build-essential 
+sudo apt install -y golang
 
 //clone code 
 git clone git@github.com:panyingyun/Pioneer600.git
@@ -52,12 +53,9 @@ cd Pioneer600/src/pi/cmd
 
 //build arm
 CGO_ENABLED=0 GOOS=linux GOARCH=arm go build  -o Pioneer600
-
-//build arm64
-CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build  -o Pioneer600
 ```
 
-### 5、How To Run 
+### 5、How to run 
 
 - Test Gpio LED (D1)
 ```shell
@@ -89,7 +87,34 @@ sudo ./Pioneer600 -f 4
 sudo ./Pioneer600 -f 5
 ```
 
-### 6、Thanks To
+### 6、Auto run when reboot OS 
+
+Run build_arm64.sh, it will autorun Pioneer600 when reboot os
+```shell
+chmod 755 build_arm64.sh 
+sudo sh build_arm64.sh 
+```
+
+Other shell cmd 
+```shell
+// enable 
+sudo systemctl enable Pioneer600.service
+
+// disable 
+sudo systemctl disable Pioneer600.service
+
+// start service 
+sudo systemctl start  Pioneer600.service
+
+// stop 
+sudo systemctl stop Pioneer600.service
+
+// restart 
+sudo systemctl restart Pioneer600.service
+```
+
+
+### 7、Thanks To
 
 ```shell
  	logger.Info("Raspberry Pi 4 and Pioneer600")

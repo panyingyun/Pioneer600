@@ -1,5 +1,4 @@
 #!/bin/bash
-
 go build -o Pioneer600
 
 sudo cp Pioneer600 /usr/local/bin/
