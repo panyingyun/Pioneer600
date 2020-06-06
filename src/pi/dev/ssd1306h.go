@@ -4,6 +4,10 @@ import (
 	"fmt"
 	"image"
 	"image/draw"
+	"pi/driver"
+	"time"
+	"unicode/utf8"
+
 	"periph.io/x/periph/conn/display"
 	"periph.io/x/periph/conn/gpio"
 	"periph.io/x/periph/conn/gpio/gpioreg"
@@ -11,7 +15,6 @@ import (
 	"periph.io/x/periph/devices/ssd1306"
 	"periph.io/x/periph/devices/ssd1306/image1bit"
 	"periph.io/x/periph/host"
-	"unicode/utf8"
 )
 
 type SSD1306Pos int
@@ -34,6 +37,9 @@ type SSD1306H struct {
 	sequential    bool
 	swapTopBottom bool
 	dev           *ssd1306.Dev
+	dcpin         gpio.PinOut
+	rsPinNo       int
+	rstDriver     *driver.DigitalPin
 }
 
 func NewSSD1306H() *SSD1306H {
@@ -45,21 +51,28 @@ func NewSSD1306H() *SSD1306H {
 		rotated:       false,
 		sequential:    false,
 		swapTopBottom: false,
+		rsPinNo:       19,
 	}
 	_, err := host.Init()
 	if err != nil {
 		fmt.Println("Host init Fail!")
 		return nil
 	}
+
+	s.dcpin = gpioreg.ByName(s.dc)
+	s.rstDriver = driver.NewDigitalPin(s.rsPinNo)
+	s.rstDriver.Export()
+	s.rstDriver.Direction(driver.OUT)
+	s.Reset()
+
 	opts := ssd1306.Opts{W: s.width, H: s.height, Rotated: s.rotated, Sequential: s.sequential, SwapTopBottom: s.swapTopBottom}
 	c, err := spireg.Open(s.spidev)
 	if err != nil {
 		fmt.Println("SPI Open Fail!")
 		return nil
 	}
-	var dc gpio.PinOut
-	dc = gpioreg.ByName(s.dc)
-	s.dev, err = ssd1306.NewSPI(c, dc, &opts)
+
+	s.dev, err = ssd1306.NewSPI(c, s.dcpin, &opts)
 	if err != nil {
 		fmt.Println("Connect to SPI Dev Fail!")
 		return nil
@@ -68,7 +81,7 @@ func NewSSD1306H() *SSD1306H {
 }
 
 func (ssd *SSD1306H) DrawText(pos SSD1306Pos, text string) error {
-	//fmt.Println("dev Bounds = ", ssd.dev.Bounds())
+	fmt.Println("dev Bounds = ", ssd.dev.Bounds())
 	src := image1bit.NewVerticalLSB(ssd.dev.Bounds())
 	img := convert(ssd.dev, src)
 	switch pos {
@@ -89,8 +102,19 @@ func (ssd *SSD1306H) DrawText(pos SSD1306Pos, text string) error {
 	}
 
 	if err := ssd.dev.Draw(ssd.dev.Bounds(), img, image.Point{}); err != nil {
+		fmt.Println("Draw error!")
 		return err
 	}
+	return nil
+}
+
+// Reset SSD1306H
+func (ssd *SSD1306H) Reset() (err error) {
+	ssd.rstDriver.Write(driver.HIGH)
+	time.Sleep(50 * time.Millisecond)
+	ssd.rstDriver.Write(driver.LOW)
+	time.Sleep(50 * time.Millisecond)
+	ssd.rstDriver.Write(driver.HIGH)
 	return nil
 }
 
@@ -98,8 +122,8 @@ func (ssd *SSD1306H) DrawImage() error {
 	return nil
 }
 
-func convert(disp display.Drawer, src image.Image) *image1bit.VerticalLSB {
-	screenBounds := disp.Bounds()
+func convert(display display.Drawer, src image.Image) *image1bit.VerticalLSB {
+	screenBounds := display.Bounds()
 	size := screenBounds.Size()
 	src = resize(src, size)
 	img := image1bit.NewVerticalLSB(screenBounds)

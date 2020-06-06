@@ -7,7 +7,7 @@ Type=simple
 User=root
 Restart=on-failure
 RestartSec=5s
-ExecStart=/usr/local/bin/Pioneer600 -f 0 -c /etc/Pioneer600/prod.yml
+ExecStart=/usr/local/bin/Pioneer600 -f 5 -c /etc/Pioneer600/prod.yml
 
 [Install]
 WantedBy=multi-user.target
