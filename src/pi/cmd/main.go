@@ -106,17 +106,17 @@ func testSSD1306() {
 	for {
 		fmt.Println("ssd1306 ...... ", ssd1306)
 		ssd1306.DrawText(dev.PosTopLeft, "Super Google.")
-		time.Sleep(10 * time.Second)
+		time.Sleep(1 * time.Second)
 		ssd1306.DrawText(dev.PosTopCenter, "Super Google.")
-		time.Sleep(10 * time.Second)
+		time.Sleep(1 * time.Second)
 		ssd1306.DrawText(dev.PosTopRight, "Super Google.")
-		time.Sleep(10 * time.Second)
+		time.Sleep(1 * time.Second)
 		ssd1306.DrawText(dev.PosBottomLeft, "Super Google.")
-		time.Sleep(10 * time.Second)
+		time.Sleep(1 * time.Second)
 		ssd1306.DrawText(dev.PosBottomCenter, "Super Google.")
-		time.Sleep(10 * time.Second)
+		time.Sleep(1 * time.Second)
 		ssd1306.DrawText(dev.PosBottomRight, "Super Google.")
-		time.Sleep(10 * time.Second)
+		time.Sleep(1 * time.Second)
 	}
 }
 
