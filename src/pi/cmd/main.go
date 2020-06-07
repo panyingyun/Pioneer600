@@ -2,15 +2,16 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"os/signal"
 	"pi/dev"
+	"pi/log"
 	"syscall"
 	"time"
 
 	"github.com/spf13/viper"
 	"github.com/urfave/cli"
+
 )
 
 const (
@@ -23,7 +24,7 @@ const (
 )
 
 func testGpioLEDOne() {
-	fmt.Println("GPIO Test LED One.")
+	log.Default().Info("GPIO Test LED One.")
 	led := dev.NewLEDOne()
 	led.Init()
 	for {
@@ -33,7 +34,7 @@ func testGpioLEDOne() {
 }
 
 func testPCF8574LedTwo() {
-	fmt.Println("I2C Test PCF8574 LED Two.")
+	log.Default().Info("I2C Test PCF8574 LED Two.")
 	led2 := dev.NewPCF8574LED()
 	for {
 		led2.Toggle()
@@ -42,7 +43,7 @@ func testPCF8574LedTwo() {
 }
 
 func testPCF8574Beep() {
-	fmt.Println("I2C Test PCF8574 Beep.")
+	log.Default().Info("I2C Test PCF8574 Beep.")
 	beep := dev.NewPCF8574Beep()
 	type note struct {
 		tone     float64
@@ -74,20 +75,20 @@ func testPCF8574Beep() {
 }
 
 func testDS18b20() {
-	fmt.Println("1-Wire Test DS18b20.")
+	log.Default().Info("1-Wire Test DS18b20.")
 	ds18b20 := dev.NewDS18B20()
 	for {
 		err := ds18b20.FetchTemperate()
 		if err != nil {
 			fmt.Println(err)
 		}
-		fmt.Printf("Current temperate : %v ℃\n", ds18b20.Temperate())
+		log.Default().Infof("Current temperate : %v ℃", ds18b20.Temperate())
 		time.Sleep(2 * time.Second)
 	}
 }
 
 func testDS3231() {
-	fmt.Println("I2C RTC　Test DS3231.")
+	log.Default().Info("I2C RTC　Test DS3231.")
 	ds3231 := dev.NewDS3231()
 	ds3231.SetTime()
 	for {
@@ -101,10 +102,10 @@ func testDS3231() {
 }
 
 func testSSD1306() {
-	fmt.Println("SPI Test SSD1306.")
+	log.Default().Info("SPI Test SSD1306.")
 	ssd1306 := dev.NewSSD1306H()
 	for {
-		fmt.Println("ssd1306 ...... ", ssd1306)
+		log.Default().Info("ssd1306 ...... ", ssd1306)
 		ssd1306.DrawText(dev.PosTopLeft, "Super Google.")
 		time.Sleep(1 * time.Second)
 		ssd1306.DrawText(dev.PosTopCenter, "Super Google.")
@@ -127,11 +128,11 @@ func run(c *cli.Context) error {
 	config.SetConfigFile(c.String("conf"))
 	config.SetConfigType("yaml")
 	config.ReadInConfig()
-	opt, err := NewOptions(config)
+	opt, err := log.NewOptions(config)
 	if err != nil {
 		fmt.Println("err = ", err)
 	}
-	logger, err := NewLogger(opt)
+	logger, err := log.NewLogger(opt)
 	if err != nil {
 		fmt.Println("err = ", err)
 	}
@@ -156,13 +157,13 @@ func run(c *cli.Context) error {
 	case FunctionSSD1306:
 		testSSD1306()
 	default:
-		fmt.Printf("%v is not define yet.\n", function)
+		logger.Info("%v is not define yet.\n", function)
 	}
 
 	//quit when receive end signal
 	sigChan := make(chan os.Signal)
 	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
-	log.Printf("signal received signal %v", <-sigChan)
+	logger.Info("signal received signal %v", <-sigChan)
 	logger.Warn("shutting down server")
 	return nil
 }

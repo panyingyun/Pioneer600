@@ -1,8 +1,8 @@
 package dev
 
 import (
-	"fmt"
 	"pi/driver"
+	"pi/log"
 )
 
 const (
@@ -26,7 +26,7 @@ type PCF8574LED struct {
 func NewPCF8574LED() *PCF8574LED {
 	dev, err := driver.NewI2cDevice(I2cDev)
 	if err != nil {
-		fmt.Println("err: ", err)
+		log.Default().Infof("err: %v", err)
 		return nil
 	}
 	dev.SetAddress(I2cAddrPcf8574)
@@ -37,7 +37,7 @@ func NewPCF8574LED() *PCF8574LED {
 }
 
 func (p *PCF8574LED) LED2On() error {
-	fmt.Println("LED2 On ...")
+	log.Default().Info("LED2 On ...")
 	err := p.i2c.WriteByte(I2cLedTwoOn)
 	if err != nil {
 		return err
@@ -47,7 +47,7 @@ func (p *PCF8574LED) LED2On() error {
 }
 
 func (p *PCF8574LED) LED2Off() error {
-	fmt.Println("LED2 Off ...")
+	log.Default().Info("LED2 Off ...")
 	err := p.i2c.WriteByte(I2cLedTwoOff)
 	if err != nil {
 		return err
@@ -57,7 +57,7 @@ func (p *PCF8574LED) LED2Off() error {
 }
 
 func (p *PCF8574LED) Toggle() error {
-	fmt.Println("LED2 Toggle ...")
+	log.Default().Info("LED2 Toggle ...")
 	if p.ledTwoStatus == StatusOffLedTwo {
 		return p.LED2On()
 	} else {

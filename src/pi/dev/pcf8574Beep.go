@@ -1,8 +1,8 @@
 package dev
 
 import (
-	"fmt"
 	"pi/driver"
+	"pi/log"
 	"time"
 )
 
@@ -145,7 +145,7 @@ type PCF8574Beep struct {
 func NewPCF8574Beep() *PCF8574Beep {
 	dev, err := driver.NewI2cDevice(I2cDev)
 	if err != nil {
-		fmt.Println("err: ", err)
+		log.Default().Error("err: ", err)
 		return nil
 	}
 	dev.SetAddress(I2cAddrPcf8574)
@@ -159,7 +159,7 @@ func NewPCF8574Beep() *PCF8574Beep {
 // On sets the buzzer to a high state.
 func (l *PCF8574Beep) On() (err error) {
 
-	fmt.Println("Beep On ...")
+	log.Default().Info("Beep On ...")
 	err = l.i2c.WriteByte(I2cBeepOn)
 	if err != nil {
 		return
@@ -170,7 +170,7 @@ func (l *PCF8574Beep) On() (err error) {
 
 // Off sets the buzzer to a low state.
 func (l *PCF8574Beep) Off() (err error) {
-	fmt.Println("Beep On ...")
+	log.Default().Info("Beep On ...")
 	err = l.i2c.WriteByte(I2cBeepOff)
 	if err != nil {
 		return
@@ -181,7 +181,7 @@ func (l *PCF8574Beep) Off() (err error) {
 
 // Toggle sets the buzzer to the opposite of it's current state
 func (l *PCF8574Beep) Toggle() (err error) {
-	fmt.Println("Beep Toggle ...")
+	log.Default().Info("Beep Toggle ...")
 	if l.beepStatus == StatusOffBeep {
 		err = l.On()
 	} else {

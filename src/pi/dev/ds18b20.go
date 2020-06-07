@@ -2,10 +2,10 @@ package dev
 
 import (
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"pi/log"
 	"regexp"
 	"sort"
 	"strconv"
@@ -63,7 +63,7 @@ func (d *DS18B20) FetchTemperate() (err error) {
 	for _, name := range names {
 		if strings.HasPrefix(name, ds18b20PrefixName) {
 			d.name = name
-			fmt.Println("ds18b20's name:  ", name)
+			log.Default().Info("ds18b20's name:  ", name)
 			break
 		}
 	}
@@ -73,7 +73,7 @@ func (d *DS18B20) FetchTemperate() (err error) {
 	}
 	//calculate temperate
 	devPath := rootPath + d.name + (string)(filepath.Separator) + ds18b20Slave
-	fmt.Println("devPath = ", devPath)
+	log.Default().Infof("devPath = ", devPath)
 	data, err := ioutil.ReadFile(devPath)
 	if err != nil {
 		return

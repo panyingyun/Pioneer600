@@ -3,6 +3,7 @@ package dev
 import (
 	"fmt"
 	"pi/driver"
+	"pi/log"
 )
 
 //http://www.waveshare.net/study/article-623-1.html
@@ -26,7 +27,7 @@ type DS3231 struct {
 func NewDS3231() *DS3231 {
 	dev, err := driver.NewI2cDevice(I2cDev)
 	if err != nil {
-		fmt.Println("err: ", err)
+		log.Default().Error("err: ", err)
 		return nil
 	}
 	dev.SetAddress(I2cAddrDS3231)

@@ -1,4 +1,4 @@
-package main
+package log
 
 import (
 	"os"
@@ -7,7 +7,9 @@ import (
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	lumberjack "gopkg.in/natefinch/lumberjack.v2"
+
 )
+
 
 // Options is log configuration struct
 type Options struct {
@@ -32,7 +34,7 @@ func NewOptions(v *viper.Viper) (*Options, error) {
 }
 
 // New for init zap log library
-func NewLogger(o *Options) (*zap.Logger, error) {
+func NewLogger(o *Options) (*zap.SugaredLogger, error) {
 	var (
 		err    error
 		level  = zap.NewAtomicLevel()
@@ -69,5 +71,13 @@ func NewLogger(o *Options) (*zap.Logger, error) {
 
 	zap.ReplaceGlobals(logger)
 
-	return logger, err
+	defaultLogger = logger.Sugar()
+	return logger.Sugar(), err
+}
+
+var defaultLogger *zap.SugaredLogger
+
+// GetDefault
+func Default() *zap.SugaredLogger {
+	return defaultLogger
 }

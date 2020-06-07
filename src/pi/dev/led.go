@@ -1,8 +1,8 @@
 package dev
 
 import (
-	"fmt"
 	"pi/driver"
+	"pi/log"
 )
 
 const (
@@ -25,7 +25,7 @@ func NewLEDOne() *LEDOne {
 }
 
 func (led *LEDOne) Init() error {
-	fmt.Println("Init LED1 here.!")
+	log.Default().Info("Init LED1 here.!")
 	err := led.pin.Export()
 	if err != nil {
 		return err
@@ -39,7 +39,7 @@ func (led *LEDOne) Init() error {
 
 //低电平亮，高电平暗
 func (led *LEDOne) On() error {
-	fmt.Println("Switch LED to On.!")
+	log.Default().Info("Switch LED to On.!")
 	err := led.pin.Write(driver.LOW)
 	if err != nil {
 		return err
@@ -49,7 +49,7 @@ func (led *LEDOne) On() error {
 }
 
 func (led *LEDOne) Off() error {
-	fmt.Println("Switch LED to Off.!")
+	log.Default().Info("Switch LED to Off.!")
 	err := led.pin.Write(driver.HIGH)
 	if err != nil {
 		return err

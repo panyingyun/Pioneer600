@@ -1,10 +1,10 @@
 package dev
 
 import (
-	"fmt"
 	"image"
 	"image/draw"
 	"pi/driver"
+	"pi/log"
 	"time"
 	"unicode/utf8"
 
@@ -55,7 +55,7 @@ func NewSSD1306H() *SSD1306H {
 	}
 	_, err := host.Init()
 	if err != nil {
-		fmt.Println("Host init Fail!")
+		log.Default().Error("Host init Fail!")
 		return nil
 	}
 
@@ -68,20 +68,20 @@ func NewSSD1306H() *SSD1306H {
 	opts := ssd1306.Opts{W: s.width, H: s.height, Rotated: s.rotated, Sequential: s.sequential, SwapTopBottom: s.swapTopBottom}
 	c, err := spireg.Open(s.spidev)
 	if err != nil {
-		fmt.Println("SPI Open Fail!")
+		log.Default().Error("SPI Open Fail!")
 		return nil
 	}
 
 	s.dev, err = ssd1306.NewSPI(c, s.dcpin, &opts)
 	if err != nil {
-		fmt.Println("Connect to SPI Dev Fail!")
+		log.Default().Error("Connect to SPI Dev Fail!")
 		return nil
 	}
 	return s
 }
 
 func (ssd *SSD1306H) DrawText(pos SSD1306Pos, text string) error {
-	fmt.Println("dev Bounds = ", ssd.dev.Bounds())
+	log.Default().Info("dev Bounds = ", ssd.dev.Bounds())
 	src := image1bit.NewVerticalLSB(ssd.dev.Bounds())
 	img := convert(ssd.dev, src)
 	switch pos {
@@ -102,7 +102,7 @@ func (ssd *SSD1306H) DrawText(pos SSD1306Pos, text string) error {
 	}
 
 	if err := ssd.dev.Draw(ssd.dev.Bounds(), img, image.Point{}); err != nil {
-		fmt.Println("Draw error!")
+		log.Default().Error("Draw error!")
 		return err
 	}
 	return nil
