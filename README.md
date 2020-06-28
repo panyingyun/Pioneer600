@@ -49,7 +49,7 @@ sudo apt install -y golang
 git clone git@github.com:panyingyun/Pioneer600.git
 
 //build 
-cd Pioneer600/src/pi/cmd
+cd Pioneer600/cmd
 
 //build arm
 CGO_ENABLED=0 GOOS=linux GOARCH=arm go build  -o Pioneer600
